@@ -1,5 +1,7 @@
+import LoadDataWithoutUseEffect from "~/components/LoadDataWithoutUseEffect";
+
 function App() {
-    return <></>;
+    return <LoadDataWithoutUseEffect />;
 }
 
 export default App;
