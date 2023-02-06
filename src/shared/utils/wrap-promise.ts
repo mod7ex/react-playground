@@ -25,21 +25,28 @@ export default function <T>(fn: (...args: any[]) => Promise<T>) {
     };
 
     const start = function <A>(...args: A[]) {
+        if (status !== "idle") return;
+
         status = "pending";
 
         fn(...args).then(
             (res) => {
-                status = "success";
-                response = res;
+                if (status !== "idle") {
+                    status = "success";
+                    response = res;
+                }
             },
             (e) => {
-                status = "error";
-                error = e;
+                if (status !== "idle") {
+                    status = "error";
+                    error = e;
+                }
             }
         );
     };
 
-    const read = () => {
+    const read = <A>({ auto, args }: { auto?: Boolean; args?: A[] } = {}) => {
+        if (auto) start(...(args ?? []));
         return handler[status]()!;
     };
 

@@ -1,4 +1,4 @@
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { wrapPromise } from "~/shared/utils";
 
 const fetchData = () =>
@@ -12,19 +12,17 @@ const fetchData = () =>
 const resource = wrapPromise(fetchData);
 
 const Data = () => {
-    const data = resource.read();
+    const data = resource.read({ auto: true });
+
+    useEffect(() => {
+        return () => resource.reset();
+    });
 
     return <h1>{data}</h1>;
 };
 
 export default () => {
     const [isUp, toggle] = useState(false);
-
-    const onClick = () => {
-        !isUp && resource.start(); // start loading data
-
-        toggle((v) => !v);
-    };
 
     return (
         <>
@@ -34,21 +32,7 @@ export default () => {
                 </Suspense>
             )}
 
-            <button onClick={onClick}>click</button>
+            <button onClick={() => toggle((v) => !v)}>click</button>
         </>
     );
 };
-
-/*
-
-export default () => {
-    throw new Promise((resolve) => {
-        setTimeout(() => {
-            resolve("Cool");
-        }, 2000);
-    });
-
-    // return <>other</>; 
-};
-
-*/
