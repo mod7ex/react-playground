@@ -1,8 +1,5 @@
-import LoadDataWithoutUseEffect from "~/components/LoadDataWithoutUseEffect";
-import "~/components";
+import { Modal } from "~/components";
 
-function App() {
-    return <LoadDataWithoutUseEffect />;
-}
-
-export default App;
+export default () => {
+    return <Modal />;
+};

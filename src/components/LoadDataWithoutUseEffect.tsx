@@ -1,5 +1,5 @@
 import { Suspense, useEffect, useState } from "react";
-import { wrapPromise } from "~/shared/utils";
+import { suspend, wrapPromise } from "~/shared/lib";
 
 const fetchData = () =>
     new Promise<string>((resolve) => {
@@ -21,6 +21,16 @@ const Data = () => {
     return <h1>{data}</h1>;
 };
 
+const SomeData = () => {
+    const data = suspend(fetchData, "some-key");
+
+    useEffect(() => {
+        return () => resource.reset();
+    });
+
+    return <h1>{data}</h1>;
+};
+
 export default () => {
     const [isUp, toggle] = useState(false);
 
@@ -28,7 +38,8 @@ export default () => {
         <>
             {isUp && (
                 <Suspense fallback={"loading ..."}>
-                    <Data />
+                    <SomeData />
+                    {/* <Data / */}
                 </Suspense>
             )}
 
