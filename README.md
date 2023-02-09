@@ -11,3 +11,5 @@
 > https://dev.to/darkmavis1980/using-swr-hook-with-suspense-in-react-18-1clk
 
 > https://www.youtube.com/watch?v=HPoC-k7Rxwo&ab_channel=RealWorldReact
+
+# Render-Props vs HOC

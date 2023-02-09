@@ -1,5 +1,3 @@
-import { Modal } from "~/components";
+import Example from "./components/hoc/Example";
 
-export default () => {
-    return <Modal />;
-};
+export default Example;

@@ -67,25 +67,3 @@ export default <T, E = unknown>(fn: () => Promise<T>, dependencies: DependencyLi
 
     return state;
 };
-
-// USAGE
-
-/*
-import RenderPropsComponent from "./components/RenderPropsComponent";
-
-function App() {
-    return (
-        <RenderPropsComponent resource="https://jonplaceholder.typicode.com/todos/1">
-            {({ pending, error, result }) => {
-                if (error) return <h1>Something went wrong: {error?.message}</h1>;
-
-                if (pending) return <h1>pending ...</h1>;
-
-                return <p>{JSON.stringify(result)}</p>;
-            }}
-        </RenderPropsComponent>
-    );
-}
-
-export default App;
-*/
