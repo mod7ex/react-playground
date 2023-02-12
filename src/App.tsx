@@ -1,3 +1,3 @@
-import Example2 from "~/components/error-boundary/Example2";
+// https://www.youtube.com/watch?v=f2mMOiCSj5c&ab_channel=CodingTech
 
-export default Example2;
+export default () => {};
