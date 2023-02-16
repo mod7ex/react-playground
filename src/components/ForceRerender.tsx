@@ -5,6 +5,8 @@ export default () => {
 
     const [state, setState] = useState(0);
 
+    console.log("re-render just took place");
+
     const onChange = () => {
         setState((v) => v);
         forceUpdate();

@@ -8,12 +8,13 @@ const DelayRender: React.FC<{ children: React.ReactNode; delay: number }> = ({ c
             setShow(true);
         }, delay);
 
+        // idempotence
         return () => clearTimeout(id);
     });
 
-    if (!show) return null;
+    if (show) return <>{children}</>;
 
-    return <>{children}</>;
+    return null;
 };
 
 export default DelayRender;

@@ -24,10 +24,6 @@ const Data = () => {
 const SomeData = () => {
     const data = suspend(fetchData, "some-key");
 
-    useEffect(() => {
-        return () => resource.reset();
-    });
-
     return <h1>{data}</h1>;
 };
 

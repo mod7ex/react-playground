@@ -30,7 +30,7 @@ export default function <T>(fn: (...args: any[]) => Promise<T>) {
     };
 
     const start = function <A>(...args: A[]) {
-        if (status !== STATUS.IDLE) return;
+        if (status !== STATUS.IDLE) return; // IDEMPOTENCE
 
         status = STATUS.PENDING;
 

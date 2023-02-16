@@ -1,6 +1,8 @@
-import useAsync from "../hooks/useAsync";
+import useAsync from "~/hooks/useAsync";
 
-// UI-agnostic
+/**
+ * Render props is basically passing a function (as prop) that will take care of rendering
+ */
 
 interface Props {
     resource: string;
@@ -9,6 +11,9 @@ interface Props {
 }
 
 const Raw: React.FC<Props> = ({ resource, children }) => {
+    // Takes care of state & logic
+    // UI-agnostic
+
     const state = useAsync(async () => {
         const response = await fetch(resource);
         if (!response.ok) throw Error("Something went wrong");
@@ -19,6 +24,8 @@ const Raw: React.FC<Props> = ({ resource, children }) => {
 };
 
 export default () => {
+    // Takes care of rendering
+
     return (
         <Raw resource="https://jonplaceholder.typicode.com/todos/1">
             {({ pending, error, result }) => {

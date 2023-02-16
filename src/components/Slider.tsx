@@ -6,49 +6,50 @@ import { useState, Children, useEffect, useMemo, useCallback } from "react";
  */
 
 const Slider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  const [current, set] = useState<number>();
+    const [current, set] = useState<number>(0);
 
-  const _children = Children.toArray(children);
+    const _children = Children.toArray(children);
 
-  const total = useMemo(() => _children.length, []);
+    const total = _children.length;
 
-  const next = useCallback(() => {
-    set((v) => {
-      if (total == null) return undefined;
-      if (v == null) return 0;
-      return (v + 1) % total;
-    });
-  }, [total]);
+    const next = useCallback(() => {
+        // both work
+        // set((v) => (v + 1) % (total || 1));
+        set((v) => total && (v + 1) % total);
+    }, [total]);
 
-  useEffect(() => {
-    const timer = setInterval(next, 1000);
+    useEffect(() => {
+        if (total > 1) {
+            const timer = setInterval(next, 1000);
 
-    return () => clearTimeout(timer);
-  }, [next]);
+            // IDEMPOTENCE
+            return () => clearTimeout(timer);
+        }
+    }, [next]);
 
-  if (current == null) return <></>;
+    if (total === 0) return <></>;
 
-  const bullets = Array<string>(total).fill("○");
-  bullets[current] = "●";
+    const bullets = Array<string>(total).fill("○");
+    bullets[current] = "●";
 
-  return (
-    <>
-      {_children[current!]}
-      <br />
-      <ul
-        style={{
-          display: "flex",
-          listStyle: "none",
-        }}
-      >
-        {bullets.map((v, i) => (
-          <li key={i}>
-            <h1>{v}</h1>
-          </li>
-        ))}
-      </ul>
-    </>
-  );
+    return (
+        <>
+            {_children[current!]}
+            <br />
+            <ul
+                style={{
+                    display: "flex",
+                    listStyle: "none",
+                }}
+            >
+                {bullets.map((v, i) => (
+                    <li key={i}>
+                        <h1>{v}</h1>
+                    </li>
+                ))}
+            </ul>
+        </>
+    );
 };
 
 export default Slider;
@@ -56,19 +57,34 @@ export default Slider;
 // Usage
 
 /*
- * import Slider from "./components/Slider";
- *
- * function App() {
- *   return (
- *     <Slider>
- *       <h1>1</h1>
- *       <h1>2</h1>
- *       <h1>3</h1>
- *       <h1>4</h1>
- *       <h1>5</h1>
- *     </Slider>
- *   );
- * }
- *
- * export default App;
- */
+import { useState } from "react";
+import Slider from "./components/Slider";
+
+function App() {
+    const [is, setIs] = useState(false);
+
+    const [count, setCount] = useState(0);
+
+    const items = Array<number>(count).fill(0);
+
+    return (
+        <>
+            {is ? "yes" : "no"} / count: {count}
+            <hr />
+            {is && (
+                <Slider>
+                    {items.map((_, v) => (
+                        <h1 key={v}>{v}</h1>
+                    ))}
+                </Slider>
+            )}
+            <hr />
+            <button onClick={() => setIs((v) => !v)}>toggle</button>
+            <br />
+            <button onClick={() => setCount((v) => v + 1)}>increment</button>
+        </>
+    );
+}
+
+export default App;
+*/

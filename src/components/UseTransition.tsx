@@ -2,7 +2,7 @@ import { Suspense, useCallback, useState, useTransition } from "react";
 import { suspend, slow } from "~/shared/lib";
 import { DelayRender } from "~/components";
 
-const LIST_SIZE = 30000;
+const LIST_SIZE = 300000;
 
 const Example1 = () => {
     const [isPending, startTransition] = useTransition();
@@ -16,10 +16,10 @@ const Example1 = () => {
         setInput(v);
 
         startTransition(() => {
+            // Concurrency Feature
+            // Low priority code
             const l = [];
-            for (let i = 0; i < LIST_SIZE; i++) {
-                l.push(v);
-            }
+            for (let i = 0; i < LIST_SIZE; i++) l.push(v);
             setList(l);
         });
     }, []);
@@ -47,7 +47,7 @@ const data = [
 const usePizza = (id: number) => {
     const pizza = data.find((_) => id === _.id);
 
-    const load = () => slow(() => Promise.resolve(pizza), pizza?.delay ?? 1000);
+    const load = () => slow(() => pizza, pizza?.delay ?? 1000);
 
     return suspend(load, id.toString());
 };

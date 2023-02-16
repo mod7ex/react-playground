@@ -1,3 +1,7 @@
-// https://www.youtube.com/watch?v=f2mMOiCSj5c&ab_channel=CodingTech
+// https://www.youtube.com/watch?v=f2mMOiCSj5c&ab_channel=CodingTech [IMPORTANT]
 
-export default () => {};
+function App() {
+    return <></>;
+}
+
+export default App;
