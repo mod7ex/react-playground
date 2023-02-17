@@ -1,9 +1,11 @@
 import { useState, useSyncExternalStore } from "react";
 
+type Tfn = () => void;
+
 class TimeStore {
     private _now = Date.now();
 
-    private subscribers = new Set<() => void>();
+    private subscribers = new Set<Tfn>();
 
     constructor() {
         setInterval(() => {
@@ -20,7 +22,7 @@ class TimeStore {
         this.notify();
     }
 
-    subscribe(notify: () => void) {
+    subscribe(notify: Tfn) {
         this.subscribers.add(notify);
 
         return () => this.subscribers.delete(notify);
@@ -37,11 +39,11 @@ class TimeStore {
 
 const store = new TimeStore();
 
+const subscribe = (notify: Tfn) => store.subscribe(notify);
+const getSnapshot = () => store.getSnapshot();
+
 const Timer = () => {
-    const now = useSyncExternalStore(
-        (notify) => store.subscribe(notify),
-        () => store.getSnapshot()
-    );
+    const now = useSyncExternalStore(subscribe, getSnapshot);
 
     return <h1>now: {now}</h1>;
 };

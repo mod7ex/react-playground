@@ -1,10 +1,12 @@
 import { useSyncExternalStore } from "react";
 
-const subscribe: (l: () => void) => () => void = (listener) => {
-    addEventListener("resize", listener);
+type Tfn = () => void;
+
+const subscribe: (l: Tfn) => Tfn = (notify) => {
+    addEventListener("resize", notify);
 
     return () => {
-        removeEventListener("resize", listener);
+        removeEventListener("resize", notify);
     };
 };
 

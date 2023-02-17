@@ -1,4 +1,4 @@
-import { Children, cloneElement } from "react";
+import { Children, cloneElement, useId } from "react";
 
 interface InputProps {
     id?: string;
@@ -7,28 +7,24 @@ interface InputProps {
 }
 
 export const Input: React.FC<InputProps> = ({ checked, onChange, id }) => {
-    const _onChange = onChange ?? (() => {});
-
-    return <input id={id} type="checkbox" checked={checked} onChange={(e) => _onChange(e.target.checked)} />;
+    return <input id={id} type="checkbox" checked={checked} onChange={(e) => onChange?.(e.target.checked)} />;
 };
 
-interface LabelProps {
-    id?: string;
-    children: React.ReactNode;
-}
+type LabelProps = React.PropsWithChildren<{ id?: string }>;
 
 export const Label: React.FC<LabelProps> = ({ children, id }) => {
     return <label htmlFor={id}>{children}</label>;
 };
 
-interface Props {
-    children: React.ReactNode;
-    id: string;
+type Props = React.PropsWithChildren<{
+    id?: string;
     onChange?: (v: boolean) => void;
     checked?: boolean;
-}
+}>;
 
 export const CheckBox: React.FC<Props> = ({ children, id, onChange, checked }) => {
+    if (!id) id = useId();
+
     const _children = Children.map(children, (child, _) => {
         // @ts-ignore
         if (child?.type === Input) {
