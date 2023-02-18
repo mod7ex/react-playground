@@ -40,11 +40,7 @@ export default class ErrorBoundary extends Component<React.PropsWithChildren<Pro
         const { error } = this.state;
 
         // You can render any custom fallback UI
-        if (error != null) {
-            const args = { reset: () => this.clear(), error };
-
-            return <Fallback {...args} />;
-        }
+        if (error != null) return <Fallback reset={() => this.clear()} error={error} />;
 
         return children;
     }

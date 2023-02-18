@@ -16,14 +16,14 @@ const Modal: React.FC<{ up: boolean; onClose: () => void; marker: string }> = ({
 
         target.appendChild(container);
 
+        // IDEMPOTENCE
         return () => {
             target.removeChild(container);
         };
     });
 
     const _onClose = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        const _et = e.target as HTMLDivElement;
-        if (_et.dataset.role === "overlay") onClose();
+        if ((e.target as HTMLDivElement).dataset.role === "overlay") onClose();
     };
 
     if (!up) return null;

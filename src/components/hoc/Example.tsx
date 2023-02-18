@@ -3,6 +3,7 @@ import { useCallback, useState } from "react";
 type Props = { count: number; increment: () => void };
 
 const HOC = (Comp: React.FC<Props>) => {
+    // share State-Logic
     return () => {
         const [count, setCount] = useState(0);
 

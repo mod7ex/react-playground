@@ -8,6 +8,7 @@ export default () => {
         stateRef.current++;
 
         return () => {
+            // should run only in DEV
             if (isDirty.current) return;
 
             stateRef.current--;

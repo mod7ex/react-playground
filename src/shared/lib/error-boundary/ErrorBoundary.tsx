@@ -102,14 +102,12 @@ export default class ErrorBoundary extends React.Component<React.PropsWithRef<Re
         return this.props.children;
     }
 }
+
 /**
  * HOC
- * @param Component
- * @param errorBoundaryProps
- * @returns
  */
-export function withErrorBoundary<P>(Component: React.ComponentType<P>, errorBoundaryProps: ErrorBoundaryProps): React.ComponentType<P> {
-    const Wrapped: React.ComponentType<P> = (props) => {
+export function withErrorBoundary<P>(Component: React.ComponentType<P>, errorBoundaryProps: ErrorBoundaryProps): React.FC<P> {
+    const Wrapped: React.FC<P> = (props) => {
         return (
             <ErrorBoundary {...errorBoundaryProps}>
                 {/* @ts-ignore */}

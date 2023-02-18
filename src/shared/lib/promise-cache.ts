@@ -40,8 +40,7 @@ export let suspend = <T>(fn: () => Promise<T>, key: string) => {
 
     const _status = _state_machine?.status!;
 
-    if (_status === STATUS.PENDING) throw throwable;
-    if (_status === STATUS.IDLE) throw throwable;
+    if (_status === STATUS.PENDING || _status === STATUS.IDLE) throw throwable;
     if (_status === STATUS.ERROR) {
         cache.delete(key);
         throw _state_machine.error;

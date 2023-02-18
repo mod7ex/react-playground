@@ -1,13 +1,13 @@
 import { useCallback, useState } from "react";
 import ErrorBoundary from "~/shared/lib/error-boundary";
 
-const Corrupted: React.FC<{ count: number; inc: () => void }> = ({ inc, count }) => {
+const Corrupted: React.FC<{ count: number; increment: () => void }> = ({ increment, count }) => {
     if (count === 3) throw Error("some thing went wrong");
 
     return (
         <div>
             <h1>Hello {count}</h1>
-            <button onClick={inc}>increment</button>
+            <button onClick={increment}>increment</button>
         </div>
     );
 };
@@ -28,7 +28,7 @@ export default () => {
 
     return (
         <ErrorBoundary Fallback={Fallback} onReset={onReset}>
-            <Corrupted count={count} inc={() => setCount((v) => v + 1)} />
+            <Corrupted count={count} increment={() => setCount((v) => v + 1)} />
         </ErrorBoundary>
     );
 };
