@@ -1,0 +1,34 @@
+$edge_font_size: calc(11px + (14 - 11) * (100vw - 400px) / (1000 - 400));
+$edge_line_height: calc(18px + (25 - 18) * (100vw - 400px) / (1000 - 400));
+
+/********************* Break Points *********************/
+$break_points: (
+    "xs": "200px",
+    "sm": "480px",
+    "md": "720px",
+    "lg": "960px",
+    "xl": "1200px",
+);
+
+/********************* Border radius *********************/
+
+$br-rounded-sm: 3px;
+$br-rounded-md: 7px;
+$br-rounded-lg: 11px;
+
+/********************* Colors *********************/
+// https://color.adobe.com/create/color-wheel
+
+$red: #ff0000;
+$green: #008000;
+$gray: gray;
+$black: black;
+$white: white;
+$primary-color: #0000ff;
+$secondary-color: #00007a;
+$third-color: #00003b;
+$hover-bg: 0.7;
+
+/********************* Timing *********************/
+
+$duration: 500ms;

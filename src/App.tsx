@@ -1,3 +1,8 @@
-import Modal from "~/components/modal";
+import { RouterProvider } from "react-router-dom";
+import router from "~/router";
 
-export default Modal;
+const App = () => {
+    return <RouterProvider router={router} />;
+};
+
+export default App;
