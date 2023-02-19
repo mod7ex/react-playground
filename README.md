@@ -17,3 +17,5 @@
 > GOOD PRACTICE to split component into tow parts one is for UI and the other is for State (easy to do snap-testing) https://youtu.be/lG6Z0FQj_SI
 
 > idempotence: and this is the reason we have the clean-Ups in useEffect and clean-Ups generally so that things can run over and over again
+
+> https://www.youtube.com/watch?v=f2mMOiCSj5c&ab_channel=CodingTech [IMPORTANT]
