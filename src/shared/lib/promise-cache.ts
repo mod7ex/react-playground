@@ -47,11 +47,3 @@ export let suspend = <T>(fn: () => Promise<T>, key: string) => {
     }
     return _state_machine.value!;
 };
-
-export let slow = <T>(fn: () => T, time: number) => {
-    return new Promise<T>((resolve) => {
-        setTimeout(() => resolve(fn()), time);
-    });
-};
-
-export const forever = new Promise((resolve) => {});

@@ -1,11 +1,21 @@
-import { Outlet, NavLink } from "react-router-dom";
+import { Outlet, NavLink, Form, useNavigation } from "react-router-dom";
 import styles from "~/layouts/Root/index.module.scss";
+import { useAuth } from "~/hooks";
+import { Spinner } from "~/components";
 
 let activeStyle = {
     textDecoration: "underline",
 };
 
+const confirmLogout: React.FormEventHandler<HTMLFormElement> = (e) => {
+    if (!confirm("Please confirm you want to log out")) {
+        e.preventDefault();
+    }
+};
+
 const NavList = () => {
+    const isAuthenticated = useAuth();
+
     return (
         <nav className={styles.container}>
             <ul className={styles.nav}>
@@ -18,15 +28,17 @@ const NavList = () => {
                         {({ isActive }) => <span>{isActive ? "@Home" : "Home"}</span>}
                     </NavLink>
                 </li>
-                <li>
-                    {/* prettier-ignore */}
-                    <NavLink
+                {isAuthenticated && (
+                    <li>
+                        {/* prettier-ignore */}
+                        <NavLink
                         to="/dashboard"
                         className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ""}`}
                     >
                         Dashboard
                     </NavLink>
-                </li>
+                    </li>
+                )}
                 <li>
                     {/* prettier-ignore */}
                     <NavLink
@@ -36,34 +48,54 @@ const NavList = () => {
                         Contact
                     </NavLink>
                 </li>
+
                 <li>
-                    {/* prettier-ignore */}
-                    <NavLink
-                        to="/login"
-                        className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ""}`} style={({ isActive }) => (isActive ? activeStyle : undefined)}
-                    >
-                        Login
-                    </NavLink>
+                    {isAuthenticated ? (
+                        <Form method="post" action="/logout" onSubmit={confirmLogout}>
+                            <button className={styles.logout} type="submit">
+                                Logout
+                            </button>
+                        </Form>
+                    ) : (
+                        <NavLink to="/login" className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ""}`}>
+                            Login
+                        </NavLink>
+                    )}
                 </li>
             </ul>
         </nav>
     );
 };
 
-const Root = () => (
-    <>
-        <header className={styles.header}>
-            <NavList />
-        </header>
+const RawRoot: React.FC<React.PropsWithChildren> = ({ children }) => {
+    return (
+        <>
+            <header className={styles.header}>
+                <NavList />
+            </header>
 
-        <main className={styles.content}>
-            <Outlet />
-        </main>
+            <main className={styles.content}>{children}</main>
 
-        <footer className={styles.footer}>
-            <p>Copyright 2023</p>
-        </footer>
-    </>
-);
+            <footer className={styles.footer}>
+                <p>Copyright 2023</p>
+            </footer>
+        </>
+    );
+};
+
+const Root: React.FC<React.PropsWithChildren> = ({ children }) => {
+    const navigation = useNavigation();
+
+    const isLoading = navigation.state === "loading";
+
+    if (isLoading)
+        return (
+            <RawRoot>
+                <Spinner />
+            </RawRoot>
+        );
+
+    return <RawRoot>{children ? children : <Outlet />}</RawRoot>;
+};
 
 export default Root;

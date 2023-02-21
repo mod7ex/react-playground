@@ -7,5 +7,6 @@ export { default as LoadDataWithoutUseEffect } from "~/components/LoadDataWithou
 export { default as UseTransition } from "~/components/UseTransition";
 export { default as DelayRender } from "~/components/DelayRender";
 export { default as Modal } from "~/components/modal";
+export { default as Spinner } from "~/components/Spinner";
 export * from "~/components/hoc";
 /* export * from "~/components/CompoundComponentsContext"; */

@@ -1,5 +1,6 @@
 import { Suspense, useCallback, useState, useTransition } from "react";
-import { suspend, slow } from "~/shared/lib";
+import { suspend } from "~/shared/lib";
+import { slow } from "~/shared/utils";
 import { DelayRender } from "~/components";
 
 const LIST_SIZE = 300000;

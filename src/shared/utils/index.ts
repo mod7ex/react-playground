@@ -15,3 +15,17 @@ export const debounce = <T>(fn: (...args: T[]) => any, timeout = 1000) => {
 
     return { run, clear };
 };
+
+export let slow = <T>(fn: () => T, time: number) => {
+    return new Promise<T>((resolve) => {
+        setTimeout(() => resolve(fn()), time);
+    });
+};
+
+export let sleep = <T>(time: number) => {
+    return new Promise<T>((resolve) => {
+        setTimeout(resolve, time);
+    });
+};
+
+export const forever = new Promise((resolve) => {});
