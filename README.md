@@ -19,3 +19,14 @@
 > idempotence: and this is the reason we have the clean-Ups in useEffect and clean-Ups generally so that things can run over and over again
 
 > https://www.youtube.com/watch?v=f2mMOiCSj5c&ab_channel=CodingTech [IMPORTANT]
+
+```
+2 - scroll on navigation -> Youtube
+
+```
+
+# Vite.JS & Build for Prod
+
+> https://sambitsahoo.com/blog/vite-code-splitting-that-works.html
+
+> https://github.com/vitejs/vite/issues/6773

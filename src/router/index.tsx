@@ -1,5 +1,14 @@
-import { createBrowserRouter, createRoutesFromElements, Route, type ActionFunctionArgs, redirect, useRouteError, type LoaderFunction } from "react-router-dom";
-import { Contact, Dashboard, Login, Home, User } from "~/pages";
+// prettier-ignore
+import {
+    Route,
+    redirect,
+    useRouteError,
+    createBrowserRouter,
+    type LoaderFunction,
+    type ActionFunctionArgs,
+    createRoutesFromElements,
+} from "react-router-dom";
+import { lazy } from "react";
 import { Root, AuthLayout } from "~/layouts";
 import auth_service from "~/services/auth";
 import { sleep } from "~/shared/utils";
@@ -48,12 +57,15 @@ const loginAction = async ({ request }: ActionFunctionArgs) => {
     const username = _form.get("username");
     const password = _form.get("password");
 
-    if (password === "Pa$$w0rd!" && username) {
-        auth_service.log_in();
-        return redirect("/dashboard");
-    }
+    const errors = {} as any;
 
-    return null;
+    if (!username) errors.email = "Username is required";
+    if (password !== "Pa$$w0rd!") errors.password = "Wrong password";
+
+    if (Object.keys(errors).length) return errors;
+
+    auth_service.log_in();
+    return redirect("/dashboard");
 };
 
 function ErrorPage() {
@@ -72,6 +84,17 @@ function ErrorPage() {
     );
 }
 
+// *********************************************************************
+
+const LazyHome = lazy(() => import("~/pages/Home"));
+const LazyContact = lazy(() => import("~/pages/Contact"));
+const LazyDashboard = lazy(() => import("~/pages/Dashboard"));
+const LazyUser = lazy(() => import("~/pages/User"));
+const LazyIdPage = lazy(() => import("~/pages/IdPage"));
+const LazyLogin = lazy(() => import("~/pages/Login/index"));
+
+// *********************************************************************
+
 export default createBrowserRouter(
     createRoutesFromElements(
         <Route
@@ -83,12 +106,13 @@ export default createBrowserRouter(
                 </Root>
             }
         >
-            <Route index element={<Home />} />
-            <Route path="contact" element={<Contact />} />
-            <Route path="dashboard" element={<Dashboard />} loader={loadUsers} />
-            <Route path="user/:id" element={<User />} loader={loadUser} />
+            <Route index element={<LazyHome />} />
+            <Route path="contact" element={<LazyContact />} />
+            <Route path="dashboard" element={<LazyDashboard />} loader={loadUsers} />
+            <Route path="id-page" element={<LazyIdPage />} />
+            <Route path="user/:id" element={<LazyUser />} loader={loadUser} />
             <Route element={<AuthLayout />}>
-                <Route path="login" element={<Login />} action={loginAction} loader={redirectIfAuthenticated} />
+                <Route path="login" element={<LazyLogin />} action={loginAction} loader={redirectIfAuthenticated} />
                 <Route path="logout" action={logoutAction} />
             </Route>
         </Route>

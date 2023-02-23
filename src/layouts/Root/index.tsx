@@ -1,7 +1,8 @@
-import { Outlet, NavLink, Form, useNavigation } from "react-router-dom";
+import { Outlet, NavLink, Form, useNavigation, ScrollRestoration } from "react-router-dom";
 import styles from "~/layouts/Root/index.module.scss";
 import { useAuth } from "~/hooks";
 import { Spinner } from "~/components";
+import { Suspense } from "react";
 
 let activeStyle = {
     textDecoration: "underline",
@@ -26,6 +27,15 @@ const NavList = () => {
                         className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ""}`}
                     >
                         {({ isActive }) => <span>{isActive ? "@Home" : "Home"}</span>}
+                    </NavLink>
+                </li>
+                <li>
+                    {/* prettier-ignore */}
+                    <NavLink
+                        to="/id-page"
+                        className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ""}`}
+                    >
+                        {({ isActive }) => <span>{isActive ? "@id-page" : "id page"}</span>}
                     </NavLink>
                 </li>
                 {isAuthenticated && (
@@ -67,6 +77,25 @@ const NavList = () => {
     );
 };
 
+const LogOutSignal = () => {
+    const navigation = useNavigation();
+
+    const is_logging_out = navigation.state === "submitting" && navigation.formAction === "/logout";
+
+    if (is_logging_out)
+        return (
+            <>
+                <hr />
+                <span>Logging out ..., see you soon</span>
+                <hr />
+                <br />
+                <br />
+            </>
+        );
+
+    return null;
+};
+
 const RawRoot: React.FC<React.PropsWithChildren> = ({ children }) => {
     return (
         <>
@@ -74,7 +103,10 @@ const RawRoot: React.FC<React.PropsWithChildren> = ({ children }) => {
                 <NavList />
             </header>
 
-            <main className={styles.content}>{children}</main>
+            <main className={styles.content}>
+                <LogOutSignal />
+                {children}
+            </main>
 
             <footer className={styles.footer}>
                 <p>Copyright 2023</p>
@@ -82,6 +114,12 @@ const RawRoot: React.FC<React.PropsWithChildren> = ({ children }) => {
         </>
     );
 };
+
+export const Fallback = () => (
+    <div>
+        <Spinner />
+    </div>
+);
 
 const Root: React.FC<React.PropsWithChildren> = ({ children }) => {
     const navigation = useNavigation();
@@ -95,7 +133,19 @@ const Root: React.FC<React.PropsWithChildren> = ({ children }) => {
             </RawRoot>
         );
 
-    return <RawRoot>{children ? children : <Outlet />}</RawRoot>;
+    return (
+        <RawRoot>
+            <Suspense fallback={<Fallback />}>{children ? children : <Outlet />}</Suspense>
+            <ScrollRestoration
+                getKey={(location, matches) => {
+                    // console.log(matches);
+                    // console.log(location);
+
+                    return location.key; // default behavior
+                }}
+            />
+        </RawRoot>
+    );
 };
 
 export default Root;

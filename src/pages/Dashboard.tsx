@@ -9,8 +9,10 @@ const Dashboard = () => {
 
     return (
         <div>
-            <h1>Dashboard</h1>
+            <h1>Dashboard ('useLoaderData' is used for loading data)</h1>
             <hr />
+            <br />
+            <br />
             {data.map(({ name, email, id }, index) => (
                 <div key={index}>
                     <h2>
