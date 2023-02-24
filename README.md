@@ -21,7 +21,7 @@
 > https://www.youtube.com/watch?v=f2mMOiCSj5c&ab_channel=CodingTech [IMPORTANT]
 
 ```
-2 - scroll on navigation -> Youtube
+Wrap Up & https://www.youtube.com/watch?v=oUZjO00NkhY&ab_channel=DaveGray
 
 ```
 

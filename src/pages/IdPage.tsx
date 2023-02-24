@@ -3,6 +3,8 @@ import { wrapPromise } from "~/shared/lib";
 import { mockUsersList } from "~/shared/mocks";
 import { Link } from "react-router-dom";
 import { useHashScroll } from "~/hooks";
+import { HashLink } from "~/components";
+import useLocation from "~/hooks/useLocation";
 
 const fetchData = () =>
     new Promise<ReturnType<typeof mockUsersList>>((resolve) => {
@@ -14,11 +16,13 @@ const fetchData = () =>
 const resource = wrapPromise(fetchData);
 
 const IdPage = () => {
-    useHashScroll("#page-section-16");
-
     const _ = resource.read({ auto: true });
 
     const items = Array(30).fill(0);
+
+    const location = useLocation();
+
+    useHashScroll(new URL(location).hash);
 
     useEffect(() => {
         return () => {
@@ -32,6 +36,8 @@ const IdPage = () => {
 
             <h2>
                 Visit :<Link to={`/id-page#page-section-16`}>Page ID 16 Section</Link>
+                <br />
+                Visit Hashed :<HashLink to={`/id-page#page-section-16`}>Page ID 16 Section</HashLink>
             </h2>
 
             <br />

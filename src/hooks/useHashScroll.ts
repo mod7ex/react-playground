@@ -18,16 +18,15 @@ const createFinder = () => {
             if (el) {
                 clear();
                 resolve(el);
+            } else {
+                timer = setInterval(() => {
+                    const _el = document.querySelector(hash);
+                    if (_el) {
+                        clear();
+                        resolve(_el);
+                    }
+                }, 100);
             }
-
-            timer = setInterval(() => {
-                console.log("Trial");
-                const _el = document.querySelector(hash);
-                if (_el) {
-                    clear();
-                    resolve(_el);
-                }
-            }, 100);
         });
     };
 

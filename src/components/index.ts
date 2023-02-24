@@ -8,5 +8,6 @@ export { default as UseTransition } from "~/components/UseTransition";
 export { default as DelayRender } from "~/components/DelayRender";
 export { default as Modal } from "~/components/modal";
 export { default as Spinner } from "~/components/Spinner";
+export { default as HashLink } from "~/components/HashLink";
 export * from "~/components/hoc";
 /* export * from "~/components/CompoundComponentsContext"; */

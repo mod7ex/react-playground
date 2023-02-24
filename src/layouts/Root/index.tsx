@@ -137,12 +137,7 @@ const Root: React.FC<React.PropsWithChildren> = ({ children }) => {
         <RawRoot>
             <Suspense fallback={<Fallback />}>{children ? children : <Outlet />}</Suspense>
             <ScrollRestoration
-                getKey={(location, matches) => {
-                    // console.log(matches);
-                    // console.log(location);
-
-                    return location.key; // default behavior
-                }}
+                getKey={(location, matches) => location.key} // default behavior
             />
         </RawRoot>
     );
