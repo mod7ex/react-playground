@@ -4,7 +4,7 @@ import { mockUsersList } from "~/shared/mocks";
 import { Link } from "react-router-dom";
 import { useHashScroll } from "~/hooks";
 import { HashLink } from "~/components";
-import useLocation from "~/hooks/useLocation";
+import { useLocation } from "react-router-dom";
 
 const fetchData = () =>
     new Promise<ReturnType<typeof mockUsersList>>((resolve) => {
@@ -22,7 +22,7 @@ const IdPage = () => {
 
     const location = useLocation();
 
-    useHashScroll(new URL(location).hash);
+    useHashScroll(location.hash);
 
     useEffect(() => {
         return () => {

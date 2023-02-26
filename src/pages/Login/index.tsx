@@ -17,7 +17,7 @@ const SubmitButton = () => {
     return <input type="submit" value="Login" />;
 };
 
-const Dashboard = () => {
+const Login = () => {
     const errors = useActionData() as any;
 
     return (
@@ -43,4 +43,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard;
+export default Login;

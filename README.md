@@ -20,11 +20,6 @@
 
 > https://www.youtube.com/watch?v=f2mMOiCSj5c&ab_channel=CodingTech [IMPORTANT]
 
-```
-Wrap Up & https://www.youtube.com/watch?v=oUZjO00NkhY&ab_channel=DaveGray
-
-```
-
 # Vite.JS & Build for Prod
 
 > https://sambitsahoo.com/blog/vite-code-splitting-that-works.html

@@ -12,7 +12,7 @@ class AuthService {
     }
 
     get authenticated() {
-        return JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY) ?? "false");
+        return !!JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY) ?? "false");
     }
 
     log_in() {

@@ -30,6 +30,11 @@ const Home = () => {
             </h2>
             <br />
             <hr />
+            <br />
+            <h2>
+                <Link to={`/login`}>Login</Link>
+            </h2>
+            <br />
             <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Expedita quas saepe illum quod rerum nisi ipsam illo unde nam exercitationem</p>
             <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Expedita quas saepe illum quod rerum nisi ipsam illo unde nam exercitationem</p>
             <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Expedita quas saepe illum quod rerum nisi ipsam illo unde nam exercitationem</p>

@@ -29,35 +29,47 @@ const NavList = () => {
                         {({ isActive }) => <span>{isActive ? "@Home" : "Home"}</span>}
                     </NavLink>
                 </li>
-                <li>
-                    {/* prettier-ignore */}
-                    <NavLink
-                        to="/id-page"
-                        className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ""}`}
-                    >
-                        {({ isActive }) => <span>{isActive ? "@id-page" : "id page"}</span>}
-                    </NavLink>
-                </li>
+
                 {isAuthenticated && (
-                    <li>
-                        {/* prettier-ignore */}
-                        <NavLink
-                        to="/dashboard"
-                        className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ""}`}
-                    >
-                        Dashboard
-                    </NavLink>
-                    </li>
+                    <>
+                        <li>
+                            {/* prettier-ignore */}
+                            <NavLink
+                                to="/id-page"
+                                className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ""}`}
+                            >
+                                {({ isActive }) => <span>{isActive ? "@id-page" : "id page"}</span>}
+                            </NavLink>
+                        </li>
+                        <li>
+                            {/* prettier-ignore */}
+                            <NavLink
+                                to="/dashboard"
+                                className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ""}`}
+                            >
+                                Dashboard
+                            </NavLink>
+                        </li>
+                        <li>
+                            {/* prettier-ignore */}
+                            <NavLink
+                                to="/contact"
+                                className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ""}`} style={({ isActive }) => (isActive ? activeStyle : undefined)}
+                            >
+                                Contact
+                            </NavLink>
+                        </li>
+                        <li>
+                            {/* prettier-ignore */}
+                            <NavLink
+                                to="/private-page"
+                                className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ""}`} style={({ isActive }) => (isActive ? activeStyle : undefined)}
+                            >
+                                Contact
+                            </NavLink>
+                        </li>
+                    </>
                 )}
-                <li>
-                    {/* prettier-ignore */}
-                    <NavLink
-                        to="/contact"
-                        className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ""}`} style={({ isActive }) => (isActive ? activeStyle : undefined)}
-                    >
-                        Contact
-                    </NavLink>
-                </li>
 
                 <li>
                     {isAuthenticated ? (
