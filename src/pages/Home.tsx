@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import { Link } from "react-router-dom";
 
-const Home = () => {
+const IdPageLink = memo(() => {
     const [current, setCurrent] = useState(0);
 
     useEffect(() => {
@@ -14,6 +14,10 @@ const Home = () => {
         };
     });
 
+    return <Link to={`/id-page#page-section-${current + 1}`}>Page ID Section {current + 1}</Link>;
+});
+
+const Home = () => {
     return (
         <div>
             <h1>Home</h1>
@@ -21,7 +25,7 @@ const Home = () => {
             <hr />
             <br />
             <h2>
-                Visit :<Link to={`/id-page#page-section-${current + 1}`}>Page ID Section {current + 1}</Link>
+                Visit :<IdPageLink />
             </h2>
             <br />
             <br />

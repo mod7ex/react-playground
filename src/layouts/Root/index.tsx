@@ -2,7 +2,7 @@ import { Outlet, NavLink, Form, useNavigation, ScrollRestoration } from "react-r
 import styles from "~/layouts/Root/index.module.scss";
 import { useAuth } from "~/hooks";
 import { Spinner } from "~/components";
-import { Suspense } from "react";
+import { memo, Suspense } from "react";
 
 let activeStyle = {
     textDecoration: "underline",
@@ -65,7 +65,7 @@ const NavList = () => {
                                 to="/private-page"
                                 className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ""}`} style={({ isActive }) => (isActive ? activeStyle : undefined)}
                             >
-                                Contact
+                                Private Page
                             </NavLink>
                         </li>
                     </>
@@ -89,7 +89,7 @@ const NavList = () => {
     );
 };
 
-const LogOutSignal = () => {
+const LogOutSignal = memo(() => {
     const navigation = useNavigation();
 
     const is_logging_out = navigation.state === "submitting" && navigation.formAction === "/logout";
@@ -106,9 +106,9 @@ const LogOutSignal = () => {
         );
 
     return null;
-};
+});
 
-const RawRoot: React.FC<React.PropsWithChildren> = ({ children }) => {
+export const RawRoot: React.FC<React.PropsWithChildren> = ({ children }) => {
     return (
         <>
             <header className={styles.header}>
@@ -134,22 +134,14 @@ export const Fallback = () => (
 );
 
 const Root: React.FC<React.PropsWithChildren> = ({ children }) => {
-    const navigation = useNavigation();
-
-    const isLoading = navigation.state === "loading";
-
-    if (isLoading)
-        return (
-            <RawRoot>
-                <Spinner />
-            </RawRoot>
-        );
-
     return (
         <RawRoot>
-            <Suspense fallback={<Fallback />}>{children ? children : <Outlet />}</Suspense>
+            {/* prettier-ignore */}
+            <Suspense fallback={<Fallback />}>
+                {children ? children : <Outlet />}
+            </Suspense>
             <ScrollRestoration
-                getKey={(location, matches) => location.key} // default behavior
+                getKey={(location, _) => location.key} // default behavior
             />
         </RawRoot>
     );

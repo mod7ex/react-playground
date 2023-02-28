@@ -8,12 +8,12 @@ import {
     type ActionFunctionArgs,
     createRoutesFromElements,
 } from "react-router-dom";
-import { lazy } from "react";
-import { Root, AuthLayout } from "~/layouts";
+import { lazy, memo } from "react";
+import { Root, AuthLayout, RequireAuth, Loader } from "~/layouts";
 import auth_service from "~/services/auth";
 import { sleep } from "~/shared/utils";
 import { mockUsersList } from "~/shared/mocks";
-import { RequireAuth } from "~/components";
+import { pathFromPayload } from "./utils";
 
 const getUserById = (v: number) => {
     const users = mockUsersList();
@@ -24,9 +24,7 @@ const getUserById = (v: number) => {
 
 const protectedLoader = (fn: LoaderFunction): LoaderFunction => {
     return (...args) => {
-        if (!auth_service.authenticated) {
-            return redirect("/login"); // add <from> to state
-        }
+        if (!auth_service.authenticated) return null;
 
         return fn(...args);
     };
@@ -50,6 +48,7 @@ const loadUser = protectedLoader(async ({ params }) => {
 });
 
 const redirectIfAuthenticated = async () => {
+    await sleep(1000);
     if (auth_service.authenticated) return redirect("/dashboard");
     return null;
 };
@@ -78,7 +77,12 @@ const loginAction = async ({ request }: ActionFunctionArgs) => {
     if (Object.keys(errors).length) return errors;
 
     auth_service.log_in();
-    return redirect("/dashboard"); // check if state contains a <from>
+
+    let to = "/dashboard";
+
+    if (history.state.usr?.from) to = pathFromPayload(history.state.usr.from);
+
+    return redirect(to); // check if state contains a <from>
 };
 
 function ErrorPage() {
@@ -100,19 +104,28 @@ function ErrorPage() {
 // *********************************************************************
 
 const LazyHome = lazy(() => import("~/pages/Home"));
-const LazyContact = lazy(() => import("~/pages/Contact"));
 const LazyDashboard = lazy(() => import("~/pages/Dashboard"));
+const LazyContact = lazy(() => import("~/pages/Contact"));
 const LazyUser = lazy(() => import("~/pages/User"));
 const LazyIdPage = lazy(() => import("~/pages/IdPage"));
 const LazyLogin = lazy(() => import("~/pages/Login/index"));
 
 // *********************************************************************
 
-const PrivatePage = () => {
-    alert("");
-    return <h1>Private page</h1>;
-};
+const PrivatePage = memo(() => {
+    alert("from page");
 
+    return <h1>Private page</h1>;
+});
+
+/*
+ *
+ * <RequireAuth /> is called too late after loaders,
+ * so we should protect loaders also (it doesn't protect loaders)
+ * (NB: page code is never called (pages are protected) -> check <private-page>)
+ *
+ * <LazyLogin /> is protected using just a loader
+ */
 export default createBrowserRouter(
     createRoutesFromElements(
         <Route
@@ -126,70 +139,82 @@ export default createBrowserRouter(
         >
             <Route index element={<LazyHome />} />
             <Route element={<RequireAuth />}>
-                {/*
-                    <RequireAuth /> is called to late after loaders,
-                    so we should protect loaders also (it doesn't protect loaders)
-                    (NB: page code is never called (pages are protected) -> check <private-page>)
-                */}
-                <Route path="dashboard" element={<LazyDashboard />} loader={loadUsers} />
+                <Route element={<Loader />}>
+                    <Route path="dashboard" element={<LazyDashboard />} loader={loadUsers} />
+                </Route>
                 <Route path="contact" element={<LazyContact />} />
                 <Route path="id-page" element={<LazyIdPage />} />
-                <Route path="user/:id" element={<LazyUser />} loader={loadUser} />
+                <Route element={<Loader />}>
+                    <Route path="user/:id" element={<LazyUser />} loader={loadUser} />
+                </Route>
                 <Route
                     path="private-page"
                     element={<PrivatePage />}
                     loader={() => {
-                        alert("");
+                        alert("from loader");
                         return null;
                     }}
                 />
             </Route>
             <Route element={<AuthLayout />}>
                 <Route path="login" element={<LazyLogin />} action={loginAction} loader={redirectIfAuthenticated} />
-                {/* <LazyLogin /> is protected using just a loader */}
             </Route>
+
             <Route path="logout" action={logoutAction} />
         </Route>
     )
 );
 
 /*
-createBrowserRouter([
+
+export default createBrowserRouter([
     {
         path: "/",
         element: <Root />,
+        errorElement: (
+            <Root>
+                <ErrorPage />
+            </Root>
+        ),
         children: [
             {
                 index: true,
-                element: <Home />,
+                element: <LazyHome />,
             },
             {
-                path: "contact",
-                element: <Contact />,
-            },
-            {
-                path: "dashboard",
-                element: <Dashboard />,
-                loader: ({ request }) =>
-                    fetch("/api/dashboard.json", {
-                        signal: request.signal,
-                    }),
+                element: <RequireAuth />,
+                children: [
+                    { path: "dashboard", element: <LazyDashboard />, loader: loadUsers },
+                    { path: "contact", element: <LazyContact /> },
+                    { path: "id-page", element: <LazyIdPage /> },
+                    { path: "user/:id", element: <LazyUser />, loader: loadUser },
+                    {
+                        path: "private-page",
+                        element: <PrivatePage />,
+                        loader: () => {
+                            alert("from loader");
+                            return null;
+                        },
+                    },
+                ],
             },
             {
                 element: <AuthLayout />,
                 children: [
                     {
                         path: "login",
-                        element: <Login />,
+                        element: <LazyLogin />,
+                        action: loginAction,
                         loader: redirectIfAuthenticated,
                     },
-                    {
-                        path: "logout",
-                        action: logoutAction,
-                    },
                 ],
+            },
+            {
+                path: "logout",
+                action: logoutAction,
             },
         ],
     },
 ]);
+
 */
