@@ -114,7 +114,6 @@ const LazyLogin = lazy(() => import("~/pages/Login/index"));
 
 const PrivatePage = memo(() => {
     alert("from page");
-
     return <h1>Private page</h1>;
 });
 
@@ -141,12 +140,10 @@ export default createBrowserRouter(
             <Route element={<RequireAuth />}>
                 <Route element={<Loader />}>
                     <Route path="dashboard" element={<LazyDashboard />} loader={loadUsers} />
+                    <Route path="user/:id" element={<LazyUser />} loader={loadUser} />
                 </Route>
                 <Route path="contact" element={<LazyContact />} />
                 <Route path="id-page" element={<LazyIdPage />} />
-                <Route element={<Loader />}>
-                    <Route path="user/:id" element={<LazyUser />} loader={loadUser} />
-                </Route>
                 <Route
                     path="private-page"
                     element={<PrivatePage />}

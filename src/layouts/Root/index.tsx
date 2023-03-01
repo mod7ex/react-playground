@@ -35,19 +35,19 @@ const NavList = () => {
                         <li>
                             {/* prettier-ignore */}
                             <NavLink
-                                to="/id-page"
+                                to="/dashboard"
                                 className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ""}`}
                             >
-                                {({ isActive }) => <span>{isActive ? "@id-page" : "id page"}</span>}
+                                Dashboard
                             </NavLink>
                         </li>
                         <li>
                             {/* prettier-ignore */}
                             <NavLink
-                                to="/dashboard"
+                                to="/id-page"
                                 className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ""}`}
                             >
-                                Dashboard
+                                {({ isActive }) => <span>{isActive ? "@id-page" : "id page"}</span>}
                             </NavLink>
                         </li>
                         <li>

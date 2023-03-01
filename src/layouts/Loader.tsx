@@ -3,7 +3,7 @@ import { Outlet, useNavigation } from "react-router-dom";
 import { Spinner } from "~/components";
 
 const Loader = memo(() => {
-    alert("from loader layout");
+    console.log("from loader layout");
 
     const navigation = useNavigation();
 

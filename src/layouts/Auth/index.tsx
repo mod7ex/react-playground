@@ -7,7 +7,6 @@ const AuthLayout = () => {
             <h1 className={styles.title}>auth layout</h1>
 
             <hr />
-
             <Outlet />
         </div>
     );
