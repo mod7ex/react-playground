@@ -1,17 +1,15 @@
 import { memo } from "react";
-import { Outlet, useNavigation } from "react-router-dom";
+import { useNavigation } from "react-router-dom";
 import { Spinner } from "~/components";
 
-const Loader = memo(() => {
-    console.log("from loader layout");
-
+const Loader = memo<React.PropsWithChildren>(({ children }) => {
     const navigation = useNavigation();
 
-    const isLoading = navigation.state === "loading";
+    const loading = navigation.state === "loading";
 
-    if (isLoading) return <Spinner />;
+    if (loading) return <Spinner />;
 
-    return <Outlet />;
+    return <>{children}</>;
 });
 
 export default Loader;

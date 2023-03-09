@@ -2,7 +2,7 @@ import { Outlet, NavLink, Form, useNavigation, ScrollRestoration } from "react-r
 import styles from "~/layouts/Root/index.module.scss";
 import { useAuth } from "~/hooks";
 import { Spinner } from "~/components";
-import { memo, Suspense } from "react";
+import { Loader } from "~/layouts";
 
 let activeStyle = {
     textDecoration: "underline",
@@ -89,24 +89,26 @@ const NavList = () => {
     );
 };
 
-const LogOutSignal = memo(() => {
-    const navigation = useNavigation();
+const AppNavigationState = () => {
+    let navigation = useNavigation();
 
     const is_logging_out = navigation.state === "submitting" && navigation.formAction === "/logout";
 
-    if (is_logging_out)
-        return (
-            <>
-                <hr />
-                <span>Logging out ..., see you soon</span>
-                <hr />
-                <br />
-                <br />
-            </>
-        );
-
-    return null;
-});
+    return (
+        <div
+            style={{
+                backgroundColor: "black",
+                color: "white",
+                textAlign: "center",
+                padding: "5px",
+                marginBottom: "1rem",
+            }}
+        >
+            <p>{navigation.state}</p>
+            <p>{is_logging_out && "Logging out ..., see you soon"}</p>
+        </div>
+    );
+};
 
 export const RawRoot: React.FC<React.PropsWithChildren> = ({ children }) => {
     return (
@@ -116,33 +118,35 @@ export const RawRoot: React.FC<React.PropsWithChildren> = ({ children }) => {
             </header>
 
             <main className={styles.content}>
-                <LogOutSignal />
-                {children}
+                <AppNavigationState />
+                <Loader>{children}</Loader>
             </main>
 
             <footer className={styles.footer}>
                 <p>Copyright 2023</p>
             </footer>
+
+            <ScrollRestoration getKey={(location, _) => location.key /* default behavior */} />
         </>
     );
 };
 
 export const Fallback = () => (
-    <div>
+    <div
+        style={{
+            display: "flex",
+            justifyContent: "center",
+            padding: "3rem",
+        }}
+    >
         <Spinner />
     </div>
 );
 
-const Root: React.FC<React.PropsWithChildren> = ({ children }) => {
+const Root = () => {
     return (
         <RawRoot>
-            {/* prettier-ignore */}
-            <Suspense fallback={<Fallback />}>
-                {children ? children : <Outlet />}
-            </Suspense>
-            <ScrollRestoration
-                getKey={(location, _) => location.key} // default behavior
-            />
+            <Outlet />
         </RawRoot>
     );
 };

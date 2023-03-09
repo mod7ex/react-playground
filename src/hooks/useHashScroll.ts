@@ -5,8 +5,9 @@ const scrollToHash = (top: number) => {
     else window.scrollTo(0, top);
 };
 
-const createFinder = () => {
+const createFinder = (max_count = 50) => {
     let timer: NodeJS.Timeout;
+    let count = 0;
 
     const clear = () => {
         timer && clearInterval(timer);
@@ -15,16 +16,20 @@ const createFinder = () => {
     const find = (hash: string) => {
         return new Promise<Element | null>((resolve) => {
             const el = document.querySelector(hash);
+            count++;
             if (el) {
                 clear();
                 resolve(el);
             } else {
                 timer = setInterval(() => {
+                    console.log("retry");
                     const _el = document.querySelector(hash);
+                    count++;
                     if (_el) {
                         clear();
                         resolve(_el);
                     }
+                    if (max_count < count) clear();
                 }, 100);
             }
         });
@@ -32,15 +37,16 @@ const createFinder = () => {
 
     return {
         clear,
+
         find,
     };
 };
 
 const useHashScroll = (hash: string | undefined) => {
-    const { clear, find } = createFinder();
-
     useEffect(() => {
         if (hash) {
+            const { clear, find } = createFinder();
+
             find(hash).then((el) => {
                 // @ts-ignore
                 el && scrollToHash(el.offsetTop);

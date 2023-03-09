@@ -7,9 +7,10 @@ import {
     type LoaderFunction,
     type ActionFunctionArgs,
     createRoutesFromElements,
+    json,
 } from "react-router-dom";
-import { lazy, memo } from "react";
-import { Root, AuthLayout, RequireAuth, Loader } from "~/layouts";
+import { lazy, memo, Suspense } from "react";
+import { Root, RawRoot, AuthLayout, RequireAuth, Loader, Fallback } from "~/layouts";
 import auth_service from "~/services/auth";
 import { sleep } from "~/shared/utils";
 import { mockUsersList } from "~/shared/mocks";
@@ -32,7 +33,7 @@ const protectedLoader = (fn: LoaderFunction): LoaderFunction => {
 
 const loadUsers = protectedLoader(async () => {
     await sleep(2000);
-    return mockUsersList();
+    return json(mockUsersList(), { status: 200 });
 });
 
 const loadUser = protectedLoader(async ({ params }) => {
@@ -44,14 +45,8 @@ const loadUser = protectedLoader(async ({ params }) => {
 
     if (!user) return redirect("/");
 
-    return user;
+    return json(user, { status: 200 });
 });
-
-const redirectIfAuthenticated = async () => {
-    await sleep(1000);
-    if (auth_service.authenticated) return redirect("/dashboard");
-    return null;
-};
 
 // -------------------------------- Actions
 
@@ -71,10 +66,10 @@ const loginAction = async ({ request }: ActionFunctionArgs) => {
 
     const errors = {} as any;
 
-    if (!username) errors.email = "Username is required";
+    if (!username) errors.username = "Username is required";
     if (password !== "Pa$$w0rd!") errors.password = "Wrong password";
 
-    if (Object.keys(errors).length) return errors;
+    if (Object.keys(errors).length) return json(errors, { status: 405 });
 
     auth_service.log_in();
 
@@ -103,12 +98,20 @@ function ErrorPage() {
 
 // *********************************************************************
 
-const LazyHome = lazy(() => import("~/pages/Home"));
-const LazyDashboard = lazy(() => import("~/pages/Dashboard"));
-const LazyContact = lazy(() => import("~/pages/Contact"));
-const LazyUser = lazy(() => import("~/pages/User"));
-const LazyIdPage = lazy(() => import("~/pages/IdPage"));
-const LazyLogin = lazy(() => import("~/pages/Login/index"));
+const wrapLazyPage = (Item: React.LazyExoticComponent<() => JSX.Element>) => {
+    return (
+        <Suspense fallback={<Fallback />}>
+            <Item />
+        </Suspense>
+    );
+};
+
+const LazyHome = wrapLazyPage(lazy(() => import("~/pages/Home")));
+const LazyDashboard = wrapLazyPage(lazy(() => import("~/pages/Dashboard")));
+const LazyContact = wrapLazyPage(lazy(() => import("~/pages/Contact")));
+const LazyUser = wrapLazyPage(lazy(() => import("~/pages/User")));
+const LazyIdPage = wrapLazyPage(lazy(() => import("~/pages/IdPage")));
+const LazyLogin = wrapLazyPage(lazy(() => import("~/pages/Login/index")));
 
 // *********************************************************************
 
@@ -131,19 +134,17 @@ export default createBrowserRouter(
             path="/"
             element={<Root />}
             errorElement={
-                <Root>
+                <RawRoot>
                     <ErrorPage />
-                </Root>
+                </RawRoot>
             }
         >
-            <Route index element={<LazyHome />} />
+            <Route index element={LazyHome} />
             <Route element={<RequireAuth />}>
-                <Route element={<Loader />}>
-                    <Route path="dashboard" element={<LazyDashboard />} loader={loadUsers} />
-                    <Route path="user/:id" element={<LazyUser />} loader={loadUser} />
-                </Route>
-                <Route path="contact" element={<LazyContact />} />
-                <Route path="id-page" element={<LazyIdPage />} />
+                <Route path="dashboard" element={LazyDashboard} loader={loadUsers} />
+                <Route path="user/:id" element={LazyUser} loader={loadUser} />
+                <Route path="contact" element={LazyContact} />
+                <Route path="id-page" element={LazyIdPage} />
                 <Route
                     path="private-page"
                     element={<PrivatePage />}
@@ -152,12 +153,11 @@ export default createBrowserRouter(
                         return null;
                     }}
                 />
+                <Route path="logout" action={logoutAction} />
             </Route>
             <Route element={<AuthLayout />}>
-                <Route path="login" element={<LazyLogin />} action={loginAction} loader={redirectIfAuthenticated} />
+                <Route path="login" element={LazyLogin} action={loginAction} />
             </Route>
-
-            <Route path="logout" action={logoutAction} />
         </Route>
     )
 );
@@ -202,7 +202,6 @@ export default createBrowserRouter([
                         path: "login",
                         element: <LazyLogin />,
                         action: loginAction,
-                        loader: redirectIfAuthenticated,
                     },
                 ],
             },

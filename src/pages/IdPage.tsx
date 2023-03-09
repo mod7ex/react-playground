@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+/* import { useEffect } from "react"; */
 import { wrapPromise } from "~/shared/lib";
 import { mockUsersList } from "~/shared/mocks";
 import { Link } from "react-router-dom";
@@ -22,13 +22,14 @@ const IdPage = () => {
 
     const location = useLocation();
 
-    useHashScroll(location.hash);
+    /* useHashScroll(location.hash); */
 
-    useEffect(() => {
+    /* useEffect(() => {
+        // We don't clear in order not to to reload on link click
         return () => {
             resource.reset();
         };
-    });
+    }); */
 
     return (
         <div>
