@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
 
 const scrollToHash = (top: number) => {
     if ("scrollBehavior" in document.documentElement.style) return window.scrollTo({ top, behavior: "smooth" });
@@ -45,11 +44,7 @@ const createFinder = (max_count = 50) => {
 
 const { clear, scroll } = createFinder();
 
-const HashLink: React.FC<React.ComponentProps<typeof Link>> = ({ to, children, onClick, ...props }) => {
-    let hash = "";
-    if (typeof to === "string") hash = new URL(to, location.origin).hash;
-    else hash = to.hash ?? "";
-
+const HashLink: React.FC<React.ComponentProps<"a"> & { hash: string }> = ({ children, hash, onClick, ...props }) => {
     useEffect(() => {
         if (hash) {
             return () => {
@@ -60,7 +55,7 @@ const HashLink: React.FC<React.ComponentProps<typeof Link>> = ({ to, children, o
 
     const handelClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         onClick?.(e);
-        /* e.preventDefault(); // TODO */
+        e.preventDefault();
         if (hash) {
             clear();
             scroll(hash);
@@ -68,9 +63,9 @@ const HashLink: React.FC<React.ComponentProps<typeof Link>> = ({ to, children, o
     };
 
     return (
-        <Link to={to} onClick={(e) => handelClick(e)} {...props}>
+        <a href="!#" onClick={(e) => handelClick(e)} {...props}>
             {children}
-        </Link>
+        </a>
     );
 };
 

@@ -144,6 +144,7 @@ export const Fallback = () => (
 );
 
 const Root = () => {
+    console.log("hello");
     return (
         <RawRoot>
             <Outlet />

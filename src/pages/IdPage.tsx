@@ -1,4 +1,4 @@
-/* import { useEffect } from "react"; */
+import { useEffect } from "react";
 import { wrapPromise } from "~/shared/lib";
 import { mockUsersList } from "~/shared/mocks";
 import { Link } from "react-router-dom";
@@ -22,14 +22,14 @@ const IdPage = () => {
 
     const location = useLocation();
 
-    /* useHashScroll(location.hash); */
+    useHashScroll(location.hash); // this is for scroll when we're coming from other pages with a hash link
 
-    /* useEffect(() => {
+    useEffect(() => {
         // We don't clear in order not to to reload on link click
         return () => {
             resource.reset();
         };
-    }); */
+    });
 
     return (
         <div>
@@ -38,7 +38,7 @@ const IdPage = () => {
             <h2>
                 Visit :<Link to={`/id-page#page-section-16`}>Page ID 16 Section</Link>
                 <br />
-                Visit Hashed :<HashLink to={`/id-page#page-section-16`}>Page ID 16 Section</HashLink>
+                Visit Hashed :<HashLink hash="#page-section-16">Page ID 16 Section</HashLink>
             </h2>
 
             <br />

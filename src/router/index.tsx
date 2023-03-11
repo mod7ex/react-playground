@@ -37,9 +37,11 @@ const loadUsers = protectedLoader(async () => {
 });
 
 const loadUser = protectedLoader(async ({ params }) => {
+    await sleep(1000);
+
     const user_id = parseInt(params?.id!);
 
-    if (!user_id) return redirect("/");
+    if (Number.isNaN(user_id)) return redirect("/");
 
     const user = getUserById(user_id);
 
@@ -124,7 +126,7 @@ const PrivatePage = memo(() => {
  *
  * <RequireAuth /> is called too late after loaders,
  * so we should protect loaders also (it doesn't protect loaders)
- * (NB: page code is never called (pages are protected) -> check <private-page>)
+ * (NB: page code is never called (pages are protected) -> log out and check <private-page>)
  *
  * <LazyLogin /> is protected using just a loader
  */

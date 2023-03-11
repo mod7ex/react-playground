@@ -1,6 +1,5 @@
 import { useEffect, useState, memo } from "react";
 import { Link } from "react-router-dom";
-import { HashLink } from "~/components";
 
 const IdPageLink = memo(() => {
     const [current, setCurrent] = useState(0);
@@ -32,8 +31,6 @@ const Home = () => {
             <br />
             <h2>
                 Visit :<Link to={`/id-page#page-section-16`}>Page ID 16 Section</Link>
-                <br />
-                Visit (Using hash-link):<HashLink to={`/id-page#page-section-16`}>Page ID 16 Section</HashLink>
             </h2>
             <br />
             <hr />
